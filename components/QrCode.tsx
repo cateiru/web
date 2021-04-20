@@ -8,7 +8,7 @@ import {
   Button,
   Spinner,
 } from '@chakra-ui/react';
-import {IoCameraSharp, IoVideocamOff} from 'react-icons/io5';
+import {IoCameraSharp, IoVideocamOff, IoReloadOutline} from 'react-icons/io5';
 import QrReader from './QrReader';
 import {cameraStatusText} from '../utils/qrUtil';
 import {useRecoilState} from 'recoil';
@@ -42,10 +42,9 @@ const QrTitle = ({text}: {text: string}) => (
  *
  * @param isLoad ロード中の状態
  * @param isUseCamera カメラ使用可否状態
+ * @param isQrRead 読み取り完了したか
  */
-const qrStatus = (isLoad: boolean, isUseCamera: boolean) => {
-  const [, setCameraComponent] = useRecoilState(cameraComponentState);
-
+const qrStatus = (isLoad: boolean, isUseCamera: boolean, isQrRead: boolean) => {
   if (isLoad && isUseCamera) {
     return (
       <Spinner
@@ -57,10 +56,18 @@ const qrStatus = (isLoad: boolean, isUseCamera: boolean) => {
       />
     );
   }
-  if (!isUseCamera) {
+  if (!isUseCamera || isQrRead) {
     return (
-      <button onClick={() => setCameraComponent(true)}>
-        <IoVideocamOff size="3rem" color="#406b94" />
+      <button
+        onClick={() => {
+          location.reload();
+        }}
+      >
+        {isQrRead ? (
+          <IoReloadOutline size="3rem" color="#406b94" />
+        ) : (
+          <IoVideocamOff size="3rem" color="#406b94" />
+        )}
       </button>
     );
   }
@@ -90,9 +97,10 @@ const Qr = () => {
         backgroundColor="#fff"
         borderRadius="2rem"
         position="relative"
+        zIndex="1"
       >
-        {qrStatus(isQrLoad, useCamera)}
-        <Box position="absolute" zIndex="0" borderRadius="2rem">
+        {qrStatus(isQrLoad, useCamera, isQrRead)}
+        <Box position="absolute" zIndex="0" borderRadius="2rem" width="100%">
           {cameraComponent ? <QrReader /> : null}
         </Box>
       </Box>
