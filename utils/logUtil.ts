@@ -1,4 +1,9 @@
-import {Log} from '../@types/log';
+/**!
+ *
+ * Copyright (C) 2021 logcation
+ */
+
+import {ParsedLog} from '../@types/log';
 
 /**
  * 読み取ったデータをバリデートします
@@ -20,7 +25,7 @@ export function validateQrData(qrData: string): boolean {
  * @param qrData QRコードのデータ
  * @returns Log
  */
-export function parseQrData(qrData: string): Log {
+export function parseQrData(qrData: string): ParsedLog {
   const isHatoyama = () => {
     if (qrData.slice(0, 2) === '20' && qrData.length > 5) {
       return true;
@@ -72,7 +77,7 @@ export function parseQrData(qrData: string): Log {
 
   const roomNumber = () => {
     const index = qrData.indexOf('-');
-    return qrData.slice(index - 2, index);
+    return qrData.slice(0, index);
   };
 
   const seatNumber = () => {
@@ -85,6 +90,5 @@ export function parseQrData(qrData: string): Log {
     floorNumber: floorNumber(),
     roomNumber: roomNumber(),
     seatNumber: seatNumber(),
-    stayingTime: new Date().toLocaleString('ja-JP'),
   };
 }

@@ -1,3 +1,9 @@
+/**!
+ * @author Yuto Watanabe
+ *
+ * Copyright (C) 2021 logcation
+ */
+
 import React from 'react';
 import {
   Box,
@@ -5,7 +11,6 @@ import {
   Text,
   AspectRatio,
   Center,
-  Button,
   Spinner,
   useToast,
 } from '@chakra-ui/react';
@@ -23,6 +28,7 @@ import {
   logState,
 } from '../utils/recoilAtoms';
 import {Campus} from '../@types/campus';
+import {LogType} from '../@types/log';
 import * as colors from '../utils/colors';
 import {parseQrData, validateQrData} from '../utils/logUtil';
 
@@ -104,7 +110,13 @@ const Qr = () => {
         const nextLog = [...log];
         const parsedQrData = parseQrData(qrData.slice(qrData.indexOf('/') + 1));
 
-        nextLog.push(parsedQrData);
+        const datum = {
+          log: qrData,
+          date: new Date().toLocaleString('ja-JP'),
+          type: LogType.normal,
+        };
+
+        nextLog.push(datum);
 
         setLog(nextLog);
 
@@ -113,7 +125,8 @@ const Qr = () => {
           description: (
             <Text wordBreak="break-all">
               {parsedQrData.buildingNumber}号館&nbsp;
-              {parsedQrData.floorNumber}階
+              {parsedQrData.floorNumber}階&nbsp;
+              {parsedQrData.roomNumber}教室
             </Text>
           ),
           status: 'info',
@@ -191,22 +204,6 @@ const QrCode = () => {
         <Text fontWeight="bold" fontSize=".9rem" color={colors.textPrimary}>
           または
         </Text>
-      </Center>
-      <Center>
-        <Button
-          backgroundColor={colors.buttonPrimary}
-          borderRadius="1.5rem"
-          padding="2rem 3rem 2rem 3rem"
-          width="20rem"
-        >
-          <Text
-            fontWeight="medium"
-            fontSize="1.2rem"
-            color={colors.textPrimary}
-          >
-            座席コードを直接入力する
-          </Text>
-        </Button>
       </Center>
     </React.Fragment>
   );
