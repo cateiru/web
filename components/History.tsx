@@ -5,6 +5,7 @@
  */
 
 import React from 'react';
+import Link from 'next/link';
 import {
   Table,
   Center,
@@ -27,30 +28,38 @@ import {
   ModalBody,
   ModalCloseButton,
   useDisclosure,
+  ButtonProps,
+  useToast,
+  Divider,
+  Spacer,
 } from '@chakra-ui/react';
 import {useRecoilState} from 'recoil';
 import {
   logState,
   tableShowState,
   tableDateShortState,
+  isCopyState,
 } from '../utils/recoilAtoms';
 import LogUtil from '../utils/LogUtil';
-import {formatDate, formatTableShow} from '../utils/formatUtil';
+import {formatDate, formatTableShow, exportLog} from '../utils/formatUtil';
 import {useTable, useSortBy} from 'react-table';
 import {
   IoArrowUpOutline,
   IoArrowDownOutline,
-  IoFilterCircleOutline,
+  IoHomeSharp,
 } from 'react-icons/io5';
 import * as colors from '../utils/colors';
 import {TableData} from '../@types/historyTable';
 import {tableShow, tableInit} from '../utils/table';
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 
 export const History = () => {
   const [log] = useRecoilState(logState);
   const [show, setShow] = useRecoilState(tableShowState);
   const [dateType, setDateType] = useRecoilState(tableDateShortState);
+  const [isCopy, setIsCopy] = useRecoilState(isCopyState);
   const {isOpen, onOpen, onClose} = useDisclosure();
+  const toast = useToast();
 
   const data: TableData[] = React.useMemo(
     () =>
@@ -111,9 +120,8 @@ export const History = () => {
     setHiddenColumns(formatTableShow(show));
   }, [show]);
 
-  const copyClipboard = () => {};
-
-  const UtilButton: React.FC<{onClick: () => void}> = ({children, onClick}) => {
+  // フィルターボタン
+  const UtilButton: React.FC<ButtonProps> = props => {
     return (
       <Center margin="1rem">
         <Button
@@ -121,9 +129,9 @@ export const History = () => {
           width="20rem"
           backgroundColor={colors.buttonSecondly}
           padding="1rem .5rem 1rem .5rem"
-          onClick={onClick}
+          {...props}
         >
-          {children}
+          {props.children}
         </Button>
       </Center>
     );
@@ -135,7 +143,7 @@ export const History = () => {
         <FormControl
           display="flex"
           alignItems="center"
-          margin="1rem .2rem 0 .2rem"
+          margin=".5rem .2rem .5rem .2rem"
           key={index}
         >
           <Switch
@@ -162,40 +170,79 @@ export const History = () => {
     });
   };
 
+  // クリップボードコピーダイアログ
+  React.useEffect(() => {
+    if (isCopy) {
+      toast({
+        title: 'クリップボードにコピーしました',
+        status: 'success',
+        duration: 4000,
+        isClosable: true,
+      });
+    }
+    setIsCopy(false);
+  }, [isCopy]);
+
   return (
     <React.Fragment>
-      <Text fontSize="1.5rem" fontWeight="bold" margin="1rem 0 1rem 2rem">
-        履歴
-      </Text>
+      <Center marginBottom="2rem">
+        <Flex width="20rem">
+          <Box display="flex" justifyContent="center" alignItems="center">
+            <Text
+              fontSize="1.3rem"
+              fontWeight="bold"
+              marginLeft="1.2rem"
+              color={colors.textPrimary}
+            >
+              履歴
+            </Text>
+          </Box>
+          <Spacer />
+          <Link href="/">
+            <Button
+              borderRadius="2rem"
+              leftIcon={<IoHomeSharp />}
+              backgroundColor={colors.buttonSecondly}
+              color={colors.buttonIconSecondly}
+              width="9rem"
+            >
+              <Text color={colors.textPrimary}>ホームへ戻る</Text>
+            </Button>
+          </Link>
+        </Flex>
+      </Center>
       <UtilButton onClick={onOpen}>
         <Text color={colors.textPrimary}>フィルター</Text>
       </UtilButton>
-      <UtilButton onClick={copyClipboard}>
-        <Text color={colors.textPrimary}>クリップボードにコピー</Text>
-      </UtilButton>
+      <CopyToClipboard onCopy={() => setIsCopy(true)} text={exportLog(log)}>
+        <UtilButton>
+          <Text color={colors.textPrimary}>クリップボードにコピー</Text>
+        </UtilButton>
+      </CopyToClipboard>
 
-      <Modal isOpen={isOpen} onClose={onClose} size="sm">
+      <Modal isOpen={isOpen} onClose={onClose} size="sm" isCentered>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>フィルター</ModalHeader>
           <ModalCloseButton size="lg" />
           <ModalBody padding="1rem 2rem 2.5rem 2rem">
             <Box>{showButton()}</Box>
+            <Divider colorScheme={colors.divider} borderWidth="1px" />
             <FormControl
               display="flex"
               alignItems="center"
-              margin="1rem .2rem 0 .2rem"
+              margin=".5rem .2rem .5rem .2rem"
             >
               <Switch
                 isChecked={dateType}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                   setDateType(event.target.checked);
                 }}
-                id="date-short"
+                id="dateShort"
                 size="lg"
               />
               <FormLabel
-                htmlFor="date-short"
+                htmlFor="dateShort"
                 mb="0"
                 marginLeft="1rem"
                 fontSize="1.2em"
@@ -207,17 +254,19 @@ export const History = () => {
           </ModalBody>
         </ModalContent>
       </Modal>
-      <Center>
+
+      <Center marginTop="2rem">
         <Table
           {...getTableProps()}
+          display="block"
           variant="striped"
           colorScheme="gray"
           size="md"
-          margin="1rem"
-          display="block"
           overflowX="scroll"
           whiteSpace="nowrap"
-          css={{'&::-webkit-overflow-scrolling': 'touch'}}
+          style={{
+            WebkitOverflowScrolling: 'touch',
+          }}
         >
           <Thead>
             {headerGroups.map(headerGroup => (

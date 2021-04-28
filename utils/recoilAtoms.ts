@@ -5,7 +5,6 @@
  */
 
 import {atom, DefaultValue} from 'recoil';
-import {Campus} from '../@types/campus';
 import {Log} from '../@types/log';
 import {tableInit} from './table';
 
@@ -68,15 +67,6 @@ export const qrDataState = atom<string>({
 });
 
 /**
- * キャンパス情報
- */
-export const campusState = atom<Campus>({
-  key: 'campus',
-  default: Campus.null,
-  effects_UNSTABLE: [localStorageEffect('campus')],
-});
-
-/**
  * ログ情報
  */
 export const logState = atom<Log[]>({
@@ -101,7 +91,18 @@ export const tableShowState = atom<boolean[]>({
   default: tableInit,
 });
 
+/**
+ * テーブルの日付短縮表示
+ */
 export const tableDateShortState = atom<boolean>({
   key: 'tableDateShort',
+  default: false,
+});
+
+/**
+ * クリップボード
+ */
+export const isCopyState = atom<boolean>({
+  key: 'isCopy',
   default: false,
 });

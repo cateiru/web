@@ -24,10 +24,8 @@ import {
   useCameraState,
   cameraComponentState,
   qrDataState,
-  campusState,
   logState,
 } from '../utils/recoilAtoms';
-import {Campus} from '../@types/campus';
 import {LogType} from '../@types/log';
 import * as colors from '../utils/colors';
 import LogUtil from '../utils/LogUtil';
@@ -94,7 +92,6 @@ const Qr = () => {
   const [isQrLoad] = useRecoilState(qrLoadState);
   const [useCamera] = useRecoilState(useCameraState);
   const [qrData] = useRecoilState(qrDataState);
-  const [isCampus] = useRecoilState(campusState);
   const [cameraComponent, setCameraComponent] = useRecoilState(
     cameraComponentState
   );
@@ -113,6 +110,7 @@ const Qr = () => {
         const parsedQrData = logUtil.parseQrData();
 
         const data = {
+          label: '',
           code: qrData,
           date: new Date().toLocaleString('ja-JP'),
           type: LogType.normal,
@@ -160,7 +158,7 @@ const Qr = () => {
       >
         {qrStatus(isQrLoad, useCamera, isQrRead)}
         <Box position="absolute" zIndex="0" borderRadius="2rem" width="100%">
-          {cameraComponent && isCampus !== Campus.null ? <QrReader /> : null}
+          {cameraComponent ? <QrReader /> : null}
         </Box>
       </Box>
     </AspectRatio>
