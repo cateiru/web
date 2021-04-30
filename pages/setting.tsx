@@ -3,18 +3,20 @@
  *
  * Copyright (C) 2021 logcation
  */
-import {Box} from '@chakra-ui/react';
-import {History} from '../components/History';
-import {Page} from '../components/Page';
 
-const HistoryPage = () => {
+import React from 'react';
+import {Box} from '@chakra-ui/react';
+import {Page} from '../components/Page';
+import {Setting} from '../components/Setting';
+
+const SettingPage = () => {
   return (
     <Page>
       <Box margin="2.3rem .1rem 1rem .1rem">
-        <History />
+        <Setting />
       </Box>
     </Page>
   );
 };
 
-export default HistoryPage;
+export default SettingPage;
