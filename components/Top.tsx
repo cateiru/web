@@ -5,10 +5,18 @@
  */
 
 import React from 'react';
-import {Flex, Text, Box, Center, Divider, Image} from '@chakra-ui/react';
+import {
+  Flex,
+  Text,
+  Box,
+  Center,
+  Divider,
+  Image,
+  useColorMode,
+} from '@chakra-ui/react';
 import {IoSettingsSharp} from 'react-icons/io5';
 import QrCode from './QrCode';
-import * as colors from '../utils/colors';
+import {colors} from '../utils/colors';
 import {Direct} from './Directly';
 import {useRecoilState} from 'recoil';
 import {logState} from '../utils/recoilAtoms';
@@ -20,13 +28,13 @@ const SettingButton = ({link}: {link: string}) => (
     buttonProps={{
       borderRadius: '2rem',
       leftIcon: <IoSettingsSharp />,
-      backgroundColor: colors.buttonSecondly,
-      color: colors.buttonIconSecondly,
+      backgroundColor: colors('buttonSecondly'),
+      color: colors('buttonIconSecondly'),
       width: '6.2rem',
     }}
     link={link}
   >
-    <Text color={colors.textPrimary}>設定</Text>
+    <Text color={colors('textPrimary')}>設定</Text>
   </PageJump>
 );
 
@@ -36,12 +44,12 @@ const OtherPageButton = ({title, link}: {title: string; link: string}) => {
       buttonProps={{
         borderRadius: '1.5rem',
         width: '20rem',
-        backgroundColor: colors.buttonSecondly,
+        backgroundColor: colors('buttonSecondly'),
         padding: '1rem .5rem 1rem .5rem',
       }}
       link={link}
     >
-      <Text color={colors.textPrimary}>{title}</Text>
+      <Text color={colors('textPrimary')}>{title}</Text>
     </PageJump>
   );
 };
@@ -51,6 +59,7 @@ const OtherPageButton = ({title, link}: {title: string; link: string}) => {
  */
 const Top = () => {
   const [log] = useRecoilState(logState);
+  const {colorMode} = useColorMode();
 
   return (
     <React.Fragment>
@@ -58,7 +67,11 @@ const Top = () => {
         <Flex width="20rem" justifyContent="center" alignItems="center">
           <Box>
             <Image
-              src="/static/images/logcation.svg"
+              src={
+                colorMode === 'light'
+                  ? '/static/images/logcation.svg'
+                  : '/static/images/logcation_dark.svg'
+              }
               htmlWidth="70%"
               htmlHeight="70%"
               alt="Logcation"
@@ -72,7 +85,11 @@ const Top = () => {
       <QrCode />
       <Direct />
       <Center margin="2rem 0 2rem 0">
-        <Divider colorScheme={colors.divider} borderWidth="1px" width="20rem" />
+        <Divider
+          colorScheme={colors('divider')}
+          borderWidth="1px"
+          width="20rem"
+        />
       </Center>
       <Center margin="1rem 0 1rem 0">
         <OtherPageButton title="着席履歴の確認" link="/history" />

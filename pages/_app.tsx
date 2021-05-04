@@ -8,11 +8,12 @@ import type {AppProps} from 'next/app';
 import {ChakraProvider} from '@chakra-ui/react';
 import {RecoilRoot} from 'recoil';
 import React from 'react';
-import {Dev} from '../components/Dev';
+import theme from '../utils/theme';
+import {Dev} from '../components/Dev'
 
 const MyApp = ({Component, pageProps}: AppProps) => (
   <RecoilRoot>
-    <ChakraProvider>
+    <ChakraProvider theme={theme}>
       <Dev />
       <Component {...pageProps} />
     </ChakraProvider>
