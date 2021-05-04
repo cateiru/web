@@ -12,7 +12,7 @@ import {
   Text,
   Link,
 } from '@chakra-ui/react';
-import * as colors from '../utils/colors';
+import {colors} from '../utils/colors';
 
 export const Dev = () => {
   const {isOpen, onOpen, onClose} = useDisclosure();
@@ -44,8 +44,8 @@ export const Dev = () => {
 
         <ModalFooter>
           <Button
-            backgroundColor={colors.mainPrimary}
-            color={colors.textPrimary}
+            backgroundColor={colors('mainPrimary')}
+            color={colors('textPrimary')}
             mr={3}
             onClick={onClose}
           >
