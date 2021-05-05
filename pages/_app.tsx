@@ -5,7 +5,7 @@
  */
 
 import type {AppProps} from 'next/app';
-import {ChakraProvider, ColorModeScript} from '@chakra-ui/react';
+import {ChakraProvider} from '@chakra-ui/react';
 import {RecoilRoot} from 'recoil';
 import React from 'react';
 import theme from '../utils/theme';
@@ -13,7 +13,6 @@ import {Dev} from '../components/Dev'
 
 const MyApp = ({Component, pageProps}: AppProps) => (
   <RecoilRoot>
-    <ColorModeScript initialColorMode="system" />
     <ChakraProvider theme={theme}>
       <Dev />
       <Component {...pageProps} />
