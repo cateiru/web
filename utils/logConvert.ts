@@ -46,9 +46,8 @@ export class LogConvert {
    * @returns room number
    */
   roomName() {
-    const roomNumberStr = this.roomNumber.toString();
-    if (roomNumberStr in uniqueRoomNames) {
-      return uniqueRoomNames[roomNumberStr];
+    if (this.roomNumber in uniqueRoomNames) {
+      return uniqueRoomNames[this.roomNumber];
     }
     return `${this.roomNumber}教室`;
   }
@@ -75,12 +74,12 @@ export class LogConvert {
   /**
    * 履歴確認テキスト
    */
-  historyTableText(dateType: boolean): TableData {
+  historyTableText(dateType: boolean, roomType: boolean): TableData {
     return {
       date: formatDate(this.date, dateType),
       building: parseInt(this.buildingNumber),
       floor: parseInt(this.floorNumber),
-      room: this.roomName(),
+      room: roomType ? this.roomName() : `${this.roomNumber}教室`,
       seat: this.seatNumber,
       campus: this.campus,
     };
