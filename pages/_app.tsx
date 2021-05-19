@@ -10,6 +10,7 @@ import {RecoilRoot} from 'recoil';
 import React from 'react';
 import theme from '../utils/theme';
 import NoSSR from 'react-no-ssr';
+import {Web} from '../components/Dev';
 
 const MyApp = ({Component, pageProps}: AppProps) => (
   <RecoilRoot>
