@@ -24,10 +24,9 @@ import {
   useCameraState,
   cameraComponentState,
   qrDataState,
-  logState,
   savedLogState,
 } from '../utils/recoilAtoms';
-import {LogType} from '../@types/log';
+import {LogType, DBLog} from '../@types/log';
 import {colors} from '../utils/colors';
 import LogUtil from '../utils/LogUtil';
 import {DB} from '../utils/db';
@@ -95,11 +94,8 @@ const Qr = () => {
   const [useCamera] = useRecoilState(useCameraState);
   const [qrData] = useRecoilState(qrDataState);
   const [, setSavedLog] = useRecoilState(savedLogState);
-  const [cameraComponent, setCameraComponent] = useRecoilState(
-    cameraComponentState
-  );
-
-  const [log, setLog] = useRecoilState(logState);
+  const [cameraComponent, setCameraComponent] =
+    useRecoilState(cameraComponentState);
 
   React.useEffect(() => {
     setCameraComponent(true);
@@ -117,21 +113,15 @@ const Qr = () => {
         await db.openDB();
 
         if (logUtil.validateQrData()) {
-          const nextLog = [...log];
-
-          const data = {
+          const dBData: DBLog = {
             label: '',
             code: qrData,
-            date: new Date().toLocaleString('ja-JP'),
+            date: new Date(),
             type: LogType.normal,
             campus: logUtil.getLogCampus(),
           };
 
-          await db.add(data);
-
-          nextLog.push(data);
-
-          setLog(nextLog);
+          await db.add(dBData);
           setSavedLog(true);
         } else {
           toast({

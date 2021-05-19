@@ -24,9 +24,9 @@ import {
 import {colors} from '../utils/colors';
 import React from 'react';
 import {useRecoilState} from 'recoil';
-import {directText, logState, savedLogState} from '../utils/recoilAtoms';
+import {directText, savedLogState} from '../utils/recoilAtoms';
 import LogUtil from '../utils/LogUtil';
-import {LogType, Log} from '../@types/log';
+import {LogType, DBLog} from '../@types/log';
 import {DB} from '../utils/db';
 
 export const Direct = () => {
@@ -34,7 +34,6 @@ export const Direct = () => {
   const {isOpen, onOpen, onClose} = useDisclosure();
 
   const [text, setText] = useRecoilState(directText);
-  const [log, setLog] = useRecoilState(logState);
   const [, setSavedLog] = useRecoilState(savedLogState);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,21 +53,16 @@ export const Direct = () => {
     await db.openDB();
 
     if (logUtil.validateQrData()) {
-      const nextLog = [...log];
-
-      const datum: Log = {
+      const dbData: DBLog = {
         label: '',
         code: data,
-        date: new Date().toLocaleString('ja-JP'),
+        date: new Date(),
         type: LogType.normal,
         campus: logUtil.getLogCampus(),
       };
 
-      await db.add(datum);
+      await db.add(dbData);
 
-      nextLog.push(datum);
-
-      setLog(nextLog);
       onClose();
       setText('');
       setSavedLog(true);
