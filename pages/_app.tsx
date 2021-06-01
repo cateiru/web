@@ -11,13 +11,16 @@ import React from 'react';
 import theme from '../utils/theme';
 import NoSSR from 'react-no-ssr';
 import {Dev} from '../components/Dev';
+import {SafeArea} from '../components/SafeArea';
 
 const MyApp = ({Component, pageProps}: AppProps) => (
   <RecoilRoot>
     <NoSSR>
       <ChakraProvider theme={theme}>
-        <Dev />
-        <Component {...pageProps} />
+        <SafeArea>
+          <Dev />
+          <Component {...pageProps} />
+        </SafeArea>
       </ChakraProvider>
     </NoSSR>
   </RecoilRoot>
