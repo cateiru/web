@@ -106,7 +106,6 @@ class MyDocument extends Document {
           />
           {/* 一般 */}
           <meta name="application-name" content="Logcation" />
-          <meta name="theme-color" content="#fff" />
           <meta
             name="description"
             content="A log application that allows you to keep a history of your actions."

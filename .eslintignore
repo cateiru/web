@@ -1,3 +1,5 @@
 .next/*
 public/*.js
 out/*
+sslServer.js
+templates/*.jinja
