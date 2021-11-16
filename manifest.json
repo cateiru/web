@@ -1,6 +1,6 @@
 {
-  "name": "Logcation",
-  "short_name": "Logcation",
+  "name": "Logcation Dev",
+  "short_name": "Logcation Dev",
   "description": "A log application that allows you to keep a history of your actions.",
   "start_url": "/",
   "display": "standalone",
