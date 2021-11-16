@@ -1,24 +1,31 @@
-import {userInfo, isCloud} from '../utils/recoilAtoms';
 import {useRecoilState, useSetRecoilState} from 'recoil';
+import {userInfo, isCloud, LoadState} from '../utils/recoilAtoms';
 import API from '../utils/api';
-import {DBLog} from '../@types/log';
 import {useToast} from '@chakra-ui/react';
+import useGetUserInfo from './useGetUserInfo';
 
-const useAddLog = () => {
+const useRename = () => {
   const [user, setUser] = useRecoilState(userInfo);
   const setCloud = useSetRecoilState(isCloud);
+  const setLoad = useSetRecoilState(LoadState);
   const toast = useToast();
+  const {getUserInfo} = useGetUserInfo();
 
-  const add = (logs: DBLog[]) => {
+  const rename = (name: string) => {
+    setLoad(true);
     const api = new API();
     api
-      .addLog(user.id, logs, () => {
+      .changeName(user.id, name, () => {
         setUser(null);
         setCloud(false);
       })
+      .then(() => {
+        getUserInfo();
+        setLoad(false);
+      })
       .catch(error => {
         toast({
-          title: 'ログをクラウドに追加できませんでした',
+          title: 'ユーザ名を変更できませんでした',
           description: (error as ErrorEvent).message,
           status: 'error',
           isClosable: true,
@@ -26,7 +33,7 @@ const useAddLog = () => {
       });
   };
 
-  return add;
+  return rename;
 };
 
-export default useAddLog;
+export default useRename;
