@@ -1,1 +1,2 @@
-export const v = 'develop';
+export const v = 'dev';
+export const isDev = true;

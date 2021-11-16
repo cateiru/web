@@ -5,15 +5,16 @@
  */
 
 import React from 'react';
-import {Box} from '@chakra-ui/react';
-import {Setting} from '../components/Setting';
 
-const SettingPage = () => {
+import {Box} from '@chakra-ui/react';
+import TermsBody from '../components/Terms';
+
+const Terms = () => {
   return (
-    <Box margin="2.3rem .1rem 1rem .1rem">
-      <Setting />
+    <Box margin="2.3rem 1.6rem 1rem 1.6rem">
+      <TermsBody />
     </Box>
   );
 };
 
-export default SettingPage;
+export default Terms;

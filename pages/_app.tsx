@@ -12,6 +12,7 @@ import theme from '../utils/theme';
 import NoSSR from 'react-no-ssr';
 import {Dev} from '../components/Dev';
 import {SafeArea} from '../components/SafeArea';
+import Load from '../components/common/Load';
 
 const MyApp = ({Component, pageProps}: AppProps) => (
   <RecoilRoot>
@@ -19,6 +20,7 @@ const MyApp = ({Component, pageProps}: AppProps) => (
       <ChakraProvider theme={theme}>
         <SafeArea>
           <Dev />
+          <Load />
           <Component {...pageProps} />
         </SafeArea>
       </ChakraProvider>
